@@ -6,7 +6,9 @@ capability 3.5). You can see the modified logic for setting
 `TORCH_CUDA_ARCH_LIST`
 [here](https://github.com/nelson-liu/builder/blob/stanfordnlp/manywheel/build.sh#L49-L72).
 
-If you're in a hurry, you can find the download links at https://nelsonliu.me/files/pytorch/whl/torch_stable.html , or in [the GitHub Releases for this repo](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases).
+If you're in a hurry, you can find the download links at https://nelsonliu.me/files/pytorch/whl/torch_stable.html , or in [the GitHub Releases for this repo](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases):
+
+- [v1.3.1](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.3.1)
 
 These wheels are pip-installable with (change the desired PyTorch / CUDA version, as necessary):
 
