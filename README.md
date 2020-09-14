@@ -45,11 +45,91 @@ Then, make a new release. We'll use [`hub`](https://hub.github.com/).
 
 ``` bash
 hub release create $(for i in <path/to/version/build/directory>/manywheel/*/* ; do echo "-a ${i}"; done) -m "PyTorch v<version>" v<version>
+
 ```
 
-## Disclaimer
+## Testing the binaries 
+
+**Note: these instructions are Stanford NLP-cluster specific, and are mostly
+recorded here for use of maintenance.**
+
+### One-time setup:
+
+Clone the PyTorch examples repo:
+
+```bash
+cd ~/git/
+hub clone pytorch/examples
+```
+
+Make symbolic links such that all the CUDA folders live in the same path, for
+ease of scripting (since the Stanford NLP cluster doesn't have CUDA 9.2 anymore).
+
+
+```bash
+mkdir -p ~/scr/cuda
+cd ~/scr/cuda
+
+ln -s /usr/local/cuda-9.0 cuda-9.0
+ln -s /usr/local/cuda-9.1 cuda-9.1
+ln -s ../cuda-9.2 cuda-9.2
+ln -s /usr/local/cuda-10.0 cuda-10.0
+ln -s /usr/local/cuda-10.1 cuda-10.1
+```
+
+### Testing a set of binaries
+
+Start by making a separate conda environment for each (torch version, CUDA
+version, Python version) setting to test:
+
+``` bash
+for torchver in 1.3.1; do 
+    for cuversion in 92 100 101; do 
+        for pyversion in 3.5 3.6 3.7; do 
+            conda env remove -n torch${torchver}_${cuversion}_py${pyversion} ; 
+            conda create -n torch${torchver}_${cuversion}_py${pyversion} python=${pyversion} --yes ; 
+            conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
+            pip install torch==${torchver}+cu${cuversion} -f https://nelsonliu.me/files/pytorch/whl/torch_stable.html ; 
+            conda deactivate ; 
+        done; 
+    done; 
+done
+```
+
+Navigate to the PyTorch examples repo, and open the word-level LM example:
+
+``` bash
+cd ~/git/examples/word_language_model/
+```
+
+Run the word-level LM example for each (torch version, CUDA version, Python version) setting, in turn:
+
+``` bash
+for torchver in 1.3.1; do 
+    for cuversion in 92 100 101; do
+        CUDA_VERSION_WITH_DOT=$(sed 's/.\{1\}$/.&/' <<< "${cuversion}")
+        export CUDA_HOME=~/scr/cuda/cuda-${CUDA_VERSION_WITH_DOT}
+        for pyversion in 3.5 3.6 3.7; do
+            echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
+            echo "CUDA_HOME: ${CUDA_HOME}"
+            conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
+            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --tied 2>&1 | tee -a wt2_lm_torch${torchver}_${cuversion}_py${pyversion}" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            conda deactivate ; 
+        done; 
+    done; 
+done
+```
+
+## Disclaimer 
 
 The modifications for the repo have only been tested for manylinux wheels---I
 haven't tried building for Windows nor OSX, nor have I tried buildiing conda
 binaries. I'm pretty sure you'd need to make more modifications to get these to
 work.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
