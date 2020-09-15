@@ -10,6 +10,7 @@ If you're in a hurry, you can find the download links at https://nelsonliu.me/fi
 
 - [v1.3.1](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.3.1)
 - [v1.4.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.4.0)
+- [v1.5.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.5.0)
 
 These wheels are pip-installable with (change the desired PyTorch / CUDA version, as necessary):
 
