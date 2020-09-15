@@ -114,7 +114,7 @@ for torchver in 1.3.1; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
             echo "CUDA_HOME: ${CUDA_HOME}"
             conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
-            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --tied 2>&1 | tee -a wt2_lm_torch${torchver}_${cuversion}_py${pyversion}" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --tied 2>&1 | tee -a wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
             conda deactivate ; 
         done; 
     done; 
