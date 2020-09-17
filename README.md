@@ -27,7 +27,21 @@ don't support them anymore in the pre-built binaries
 (https://github.com/pytorch/pytorch/issues/30532). I compiled PyTorch binaries
 that add back compute capability 3.5 support.
 
-Specifically, I reverted commits https://github.com/pytorch/builder/commit/8d064bfcfe2e73d89a067dd5f9311828c1792f90 and https://github.com/pytorch/builder/commit/2aac90bd723dfbb3dc7728152bf0e6877ec4da16 , to make the `TORCH_CUDA_ARCH_LIST` environment variable more inclusive. The specific value of this variable depends on the CUDA version that PyTorch is being compiled against, you can check for yourself at https://github.com/nelson-liu/builder/blob/stanfordnlp/manywheel/build.sh#L49-L74
+Specifically, I reverted commits
+https://github.com/pytorch/builder/commit/8d064bfcfe2e73d89a067dd5f9311828c1792f90
+and
+https://github.com/pytorch/builder/commit/2aac90bd723dfbb3dc7728152bf0e6877ec4da16
+, to make the `TORCH_CUDA_ARCH_LIST` environment variable more inclusive. The
+specific value of this variable depends on the CUDA version that PyTorch is
+being compiled against, you can check for yourself at
+https://github.com/nelson-liu/builder/blob/stanfordnlp/manywheel/build.sh#L49-L74
+
+These wheels are lightly tested. There are some trivial checks that happen
+during the build process (e.g., checking that CUDA is properly linked), but I
+also ran the PyTorch word-level language modeling example on each binary to
+ensure that binaries within each major-version yield the same result /
+reasonable results. You can see the logs of these runs in the
+[test_logs](./test_logs) directory.
 
 ## Disclaimer
 
