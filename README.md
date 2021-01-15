@@ -120,7 +120,8 @@ for torchver in 1.3.1; do
         for pyversion in 3.5 3.6 3.7; do 
             conda env remove -n torch${torchver}_${cuversion}_py${pyversion} ; 
             conda create -n torch${torchver}_${cuversion}_py${pyversion} python=${pyversion} --yes ; 
-            conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
+            conda activate torch${torchver}_${cuversion}_py${pyversion} ;
+            pip install -U pip
             pip install torch==${torchver}+cu${cuversion} -f https://nelsonliu.me/files/pytorch/whl/torch_stable.html ; 
             conda deactivate ; 
         done; 
