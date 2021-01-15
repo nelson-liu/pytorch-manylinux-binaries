@@ -94,21 +94,6 @@ cd ~/git/
 hub clone pytorch/examples
 ```
 
-Make symbolic links such that all the CUDA folders live in the same path, for
-ease of scripting (since the Stanford NLP cluster doesn't have CUDA 9.2 anymore).
-
-
-```bash
-mkdir -p ~/scr/cuda
-cd ~/scr/cuda
-
-ln -s /usr/local/cuda-9.0 cuda-9.0
-ln -s /usr/local/cuda-9.1 cuda-9.1
-ln -s ../cuda-9.2 cuda-9.2
-ln -s /usr/local/cuda-10.0 cuda-10.0
-ln -s /usr/local/cuda-10.1 cuda-10.1
-```
-
 ### Testing a set of binaries
 
 Start by making a separate conda environment for each (torch version, CUDA
@@ -127,6 +112,7 @@ for torchver in 1.3.1; do
         done; 
     done; 
 done
+conda clean --all --yes
 ```
 
 Navigate to the PyTorch examples repo, and open the word-level LM example:
@@ -140,13 +126,10 @@ Run the word-level LM example for each (torch version, CUDA version, Python vers
 ``` bash
 for torchver in 1.3.1; do 
     for cuversion in 92 100 101; do
-        CUDA_VERSION_WITH_DOT=$(sed 's/.\{1\}$/.&/' <<< "${cuversion}")
-        export CUDA_HOME=~/scr/cuda/cuda-${CUDA_VERSION_WITH_DOT}
         for pyversion in 3.5 3.6 3.7; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
-            echo "CUDA_HOME: ${CUDA_HOME}"
             conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
-            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
             conda deactivate ; 
         done; 
     done; 
@@ -156,13 +139,10 @@ done
 ```bash
 for torchver in 1.4.0; do 
     for cuversion in 92 100 101; do
-        CUDA_VERSION_WITH_DOT=$(sed 's/.\{1\}$/.&/' <<< "${cuversion}")
-        export CUDA_HOME=~/scr/cuda/cuda-${CUDA_VERSION_WITH_DOT}
         for pyversion in 3.5 3.6 3.7 3.8; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
-            echo "CUDA_HOME: ${CUDA_HOME}"
             conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
-            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
             conda deactivate ; 
         done; 
     done; 
@@ -172,13 +152,10 @@ done
 ```bash
 for torchver in 1.5.0; do 
     for cuversion in 92 101 102; do
-        CUDA_VERSION_WITH_DOT=$(sed 's/.\{1\}$/.&/' <<< "${cuversion}")
-        export CUDA_HOME=~/scr/cuda/cuda-${CUDA_VERSION_WITH_DOT}
         for pyversion in 3.5 3.6 3.7 3.8; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
-            echo "CUDA_HOME: ${CUDA_HOME}"
             conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
-            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
             conda deactivate ; 
         done; 
     done; 
@@ -188,13 +165,10 @@ done
 ```bash
 for torchver in 1.5.1; do 
     for cuversion in 92 101 102; do
-        CUDA_VERSION_WITH_DOT=$(sed 's/.\{1\}$/.&/' <<< "${cuversion}")
-        export CUDA_HOME=~/scr/cuda/cuda-${CUDA_VERSION_WITH_DOT}
         for pyversion in 3.5 3.6 3.7 3.8; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
-            echo "CUDA_HOME: ${CUDA_HOME}"
             conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
-            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
             conda deactivate ; 
         done; 
     done; 
@@ -204,13 +178,10 @@ done
 ```bash
 for torchver in 1.6.0; do 
     for cuversion in 101 102 92; do
-        CUDA_VERSION_WITH_DOT=$(sed 's/.\{1\}$/.&/' <<< "${cuversion}")
-        export CUDA_HOME=~/scr/cuda/cuda-${CUDA_VERSION_WITH_DOT}
         for pyversion in 3.6 3.7 3.8; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
-            echo "CUDA_HOME: ${CUDA_HOME}"
             conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
-            nlprun 'echo $CUDA_HOME ; python -c "import torch; print(torch.cuda.is_available())" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
             conda deactivate ; 
         done; 
     done; 
