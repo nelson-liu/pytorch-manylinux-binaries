@@ -73,13 +73,7 @@ for commands to build wheels. You can find the build logs for each wheel in the 
 
 ## Uploading new wheels to GitHub Releases
 
-First, start off by renaming the files to match the PyTorch standard.
-
-``` bash
-python3 rename_binaries.py <path/to/version/build/directory>/manywheel/cu<version>/* cu<version>
-```
-
-Then, make a new release. We'll use [`hub`](https://hub.github.com/).
+To make a new release, we'll use [`hub`](https://hub.github.com/).
 
 ``` bash
 hub release create $(for i in <path/to/version/build/directory>/manywheel/*/* ; do echo "-a ${i}"; done) -m "PyTorch v<version>" v<version>
