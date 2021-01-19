@@ -107,7 +107,8 @@ for torchver in 1.3.1; do
             conda create -n torch${torchver}_${cuversion}_py${pyversion} python=${pyversion} --yes ; 
             conda activate torch${torchver}_${cuversion}_py${pyversion} ;
             pip install -U pip
-            pip install torch==${torchver}+cu${cuversion} -f https://nelsonliu.me/files/pytorch/whl/torch_stable.html ; 
+            pip install torch==${torchver}+cu${cuversion} -f https://nelsonliu.me/files/pytorch/whl/torch_stable.html ;
+            pip install numpy ;
             conda deactivate ; 
         done; 
     done; 
