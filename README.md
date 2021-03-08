@@ -1,10 +1,7 @@
 # pytorch-manylinux-binaries
 
 This repository hosts PyTorch binaries (manylinux wheels) for versions since
-v1.3.1 (up to v.1.6.0), rebuilt to include support for K40 GPUs (NVIDIA compute
-capability 3.5). You can see the modified logic for setting
-`TORCH_CUDA_ARCH_LIST`
-[here](https://github.com/nelson-liu/builder/blob/stanfordnlp/manywheel/build.sh#L49-L72).
+v1.3.1, rebuilt to include support for K40 GPUs (NVIDIA compute capability 3.5).
 
 If you're in a hurry, you can find the download links at https://nelsonliu.me/files/pytorch/whl/torch_stable.html , or in [the GitHub Releases for this repo](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases):
 
@@ -28,15 +25,6 @@ Lots of places still use NVIDIA K40 GPUs, but versions of PyTorch since 1.3.1
 don't support them anymore in the pre-built binaries
 (https://github.com/pytorch/pytorch/issues/30532). I compiled PyTorch binaries
 that add back compute capability 3.5 support.
-
-Specifically, I reverted commits
-https://github.com/pytorch/builder/commit/8d064bfcfe2e73d89a067dd5f9311828c1792f90
-and
-https://github.com/pytorch/builder/commit/2aac90bd723dfbb3dc7728152bf0e6877ec4da16
-, to make the `TORCH_CUDA_ARCH_LIST` environment variable more inclusive. The
-specific value of this variable depends on the CUDA version that PyTorch is
-being compiled against, you can check for yourself at
-https://github.com/nelson-liu/builder/blob/stanfordnlp/manywheel/build.sh#L49-L74
 
 These wheels are lightly tested. There are some trivial checks that happen
 during the build process (e.g., checking that CUDA is properly linked), but I
@@ -67,11 +55,42 @@ of PyTorch or rerunning builds, the process is documented below.
 
 ## Building new wheels
 
+### PyTorch 1.3.1 to 1.7.1
+
 The builds are done off of
 [nelson-liu/builder@stanfordnlp](https://github.com/nelson-liu/builder/tree/stanfordnlp).
 See the [README of that
 repo](https://github.com/nelson-liu/builder/tree/stanfordnlp#commands-to-build)
-for commands to build wheels. You can find the build logs for each wheel in the [build_logs folder](https://github.com/nelson-liu/pytorch-manylinux-binaries/tree/master/build_logs)
+for commands to build wheels. You can find the build logs for each wheel in the [build_logs folder](https://github.com/nelson-liu/pytorch-manylinux-binaries/tree/master/build_logs).
+
+These builds were only compiled for CUDA 9.x and 10.x, with `TORCH_CUDA_ARCH_LIST=3.5;5.0;6.0;7.0`.
+
+### PyTorch 1.8.0 and onwards
+
+Starting from PyTorch 1.8.0, I've been using the script in `./build_scripts/` to
+create the binaries.
+
+- For the CUDA 10.x builds, `TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;6.0;7.0`.
+- For the CUDA 11.1 build, `TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;6.0;7.0;7.5;8.0;8.6`.
+
+#### PyTorch 1.8.0
+
+``` bash
+for torchver in 1.8.0; do 
+    for cuversion in 11.1 10.2 10.1; do
+        for pyversion in 3.6m 3.7m 3.8 3.9; do
+            for builderver in 4b78fd0f5bb0a2601146584239e377098cdc1ed9; do
+                cuversion_nodot="$(echo $cuversion | tr -d '.')"
+                ./build_pytorch_wheel.sh \
+                ${pyversion} \
+                ${cuversion} \
+                ${torchver} \
+                ${builderver} |& tee ${torchver}.${pyversion}.cu${cuversion_nodot}.txt
+            done
+        done; 
+    done; 
+done
+```
 
 ## Uploading new wheels to GitHub Releases
 
