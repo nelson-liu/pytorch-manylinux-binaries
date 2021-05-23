@@ -93,6 +93,25 @@ for torchver in 1.8.0; do
 done
 ```
 
+#### PyTorch 1.8.1
+
+``` bash
+for torchver in 1.8.1; do 
+    for cuversion in 11.1 10.2 10.1; do
+        for pyversion in 3.6m 3.7m 3.8 3.9; do
+            for builderver in 52c2f25f20164f1d4d36c620c451a6577353637c; do
+                cuversion_nodot="$(echo $cuversion | tr -d '.')"
+                ./build_pytorch_wheel.sh \
+                ${pyversion} \
+                ${cuversion} \
+                ${torchver} \
+                ${builderver} |& tee ${torchver}.${pyversion}.cu${cuversion_nodot}.txt
+            done
+        done; 
+    done; 
+done
+```
+
 ## Uploading new wheels to GitHub Releases
 
 To make a new release, we'll use [`hub`](https://hub.github.com/).
