@@ -13,6 +13,7 @@ If you're in a hurry, you can find the download links at https://nelsonliu.me/fi
 - [v1.7.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.7.0)
 - [v1.7.1](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.7.1)
 - [v1.8.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.8.0)
+- [v1.8.1](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.8.1)
 
 These wheels are pip-installable with (change the desired PyTorch / CUDA version, as necessary):
 
@@ -258,6 +259,19 @@ done
 
 ```bash
 for torchver in 1.8.0; do 
+    for cuversion in 111 101 102; do
+        for pyversion in 3.6 3.7 3.8 3.9; do
+            echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
+            conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p jag-lo --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            conda deactivate ; 
+        done; 
+    done; 
+done
+```
+
+```bash
+for torchver in 1.8.1; do 
     for cuversion in 111 101 102; do
         for pyversion in 3.6 3.7 3.8 3.9; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
