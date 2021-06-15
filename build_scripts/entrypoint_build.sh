@@ -72,6 +72,19 @@ if [[ -z "$DOCKER_IMAGE" ]]; then
     export DOCKER_IMAGE="pytorch/manylinux-cuda${DESIRED_CUDA:2}"
 fi
 
+USE_GOLD_LINKER="OFF"
+# GOLD linker can not be used if CUPTI is statically linked into PyTorch, see https://github.com/pytorch/pytorch/issues/57744
+if [[ ${DESIRED_CUDA} == "cpu" ]]; then
+  USE_GOLD_LINKER="ON"
+fi
+
+USE_WHOLE_CUDNN="OFF"
+# Link whole cuDNN for CUDA-11.1 to include fp16 fast kernels
+if [[  "$(uname)" == "Linux" && "${DESIRED_CUDA}" == "cu111" ]]; then
+  USE_WHOLE_CUDNN="ON"
+fi
+export USE_GLOO_WITH_OPENSSL="ON"
+
 export workdir="/"
 export PYTORCH_ROOT="$workdir/pytorch"
 export BUILDER_ROOT="$workdir/builder"
