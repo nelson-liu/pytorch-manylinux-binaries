@@ -14,6 +14,7 @@ If you're in a hurry, you can find the download links at https://nelsonliu.me/fi
 - [v1.7.1](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.7.1)
 - [v1.8.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.8.0)
 - [v1.8.1](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.8.1)
+- [v1.9.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.9.0)
 
 These wheels are pip-installable with (change the desired PyTorch / CUDA version, as necessary):
 
@@ -101,6 +102,25 @@ for torchver in 1.8.1; do
     for cuversion in 11.1 10.2 10.1; do
         for pyversion in 3.6m 3.7m 3.8 3.9; do
             for builderver in 52c2f25f20164f1d4d36c620c451a6577353637c; do
+                cuversion_nodot="$(echo $cuversion | tr -d '.')"
+                ./build_pytorch_wheel.sh \
+                ${pyversion} \
+                ${cuversion} \
+                ${torchver} \
+                ${builderver} |& tee ${torchver}.${pyversion}.cu${cuversion_nodot}.txt
+            done
+        done; 
+    done; 
+done
+```
+
+#### PyTorch 1.9.0
+
+``` bash
+for torchver in 1.9.0; do 
+    for cuversion in 11.1 10.2 ; do
+        for pyversion in 3.6m 3.7m 3.8 3.9; do
+            for builderver in 71a2b9aaf0b4d56a2b6048b92ba71858f3717dbb; do
                 cuversion_nodot="$(echo $cuversion | tr -d '.')"
                 ./build_pytorch_wheel.sh \
                 ${pyversion} \
