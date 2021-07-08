@@ -302,3 +302,16 @@ for torchver in 1.8.1; do
     done; 
 done
 ```
+
+```bash
+for torchver in 1.9.0; do 
+    for cuversion in 111 102; do
+        for pyversion in 3.6 3.7 3.8 3.9; do
+            echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
+            conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p john --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            conda deactivate ; 
+        done; 
+    done; 
+done
+```
