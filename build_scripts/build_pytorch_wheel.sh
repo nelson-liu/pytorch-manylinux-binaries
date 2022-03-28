@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eux
 
-if [[ "$#" != 4 ]]; then
+if [[ "$#" != 5 ]]; then
   if [[ -z "$DESIRED_PYTHON" || -z "$DESIRED_CUDA" || -z "$PYTORCH_VERSION" || -z "$BUILDER_REVISION" ]]; then
       echo "The env variabled DESIRED_PYTHON must be set like '2.7mu' or '3.6m' etc"
       echo "The env variabled DESIRED_CUDA must be set like '11.1' or '10.2' etc"
