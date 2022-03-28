@@ -1,26 +1,12 @@
 #!/usr/bin/env bash
 set -eux
 
-if [[ "$#" != 5 ]]; then
-  if [[ -z "$DESIRED_PYTHON" || -z "$DESIRED_CUDA" || -z "$PYTORCH_VERSION" || -z "$BUILDER_REVISION" ]]; then
-      echo "The env variabled DESIRED_PYTHON must be set like '2.7mu' or '3.6m' etc"
-      echo "The env variabled DESIRED_CUDA must be set like '11.1' or '10.2' etc"
-      echo "The env variabled PYTORCH_VERSION must be set like '1.8.0' or '1.7.1' etc"
-      echo "The env variabled BUILDER_REVISION must be set like 'master' or '4b78fd0f5bb0a2601146584239e377098cdc1ed9' etc"
-      exit 1
-  fi
-  desired_python="$DESIRED_PYTHON"
-  desired_cuda="$DESIRED_CUDA"
-  pytorch_version="$PYTORCH_VERSION"
-  builder_revision="$BUILDER_REVISION"
-  docker_image="$DOCKER_IMAGE"
-else
-  desired_python="$1"
-  desired_cuda="$2"
-  pytorch_version="$3"
-  builder_revision="$4"
-  docker_image="$5"
-fi
+desired_python="$1"
+desired_cuda="$2"
+pytorch_version="$3"
+builder_revision="$4"
+docker_image="$5"
+
 
 if [ -n "${docker_image}" ]; then
   echo "Using docker image ${docker_image}"
