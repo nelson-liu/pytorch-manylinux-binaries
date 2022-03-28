@@ -13,11 +13,20 @@ if [[ "$#" != 4 ]]; then
   desired_cuda="$DESIRED_CUDA"
   pytorch_version="$PYTORCH_VERSION"
   builder_revision="$BUILDER_REVISION"
+  docker_image="$DOCKER_IMAGE"
 else
   desired_python="$1"
   desired_cuda="$2"
   pytorch_version="$3"
   builder_revision="$4"
+  docker_image="$5"
+fi
+
+if [ -n "${docker_image}" ]; then
+  echo "Using docker image ${docker_image}"
+else
+  echo "Docker image not supplied, using pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
+  docker_image="pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
 fi
 
 CUDA_VERSION_NO_DOT=$(echo $desired_cuda | tr -d '.')
@@ -37,4 +46,4 @@ nvidia-docker run --rm -it \
     --volume "$(pwd)/${MANYWHEELS_BUILD_DIR}:/remote" \
     --volume "$(pwd)/entrypoint_build.sh:/entrypoint_build.sh" \
     --entrypoint /entrypoint_build.sh \
-    "pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
+    ${docker_image}
