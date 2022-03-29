@@ -93,13 +93,13 @@ export PYTORCH_FINAL_PACKAGE_DIR="/remote"
 
 export MAX_JOBS=${MAX_JOBS:-$(( $(nproc) - 2 ))}
 
-if [[ "${DESIRED_CUDA}" == "cu111" ]]; then
+if [[ "${DESIRED_CUDA}" == cu11* ]]; then
   export BUILD_SPLIT_CUDA="ON"
 fi
 
 export OVERRIDE_TORCH_CUDA_ARCH_LIST="3.5;3.7;5.0;6.0;7.0"
 case ${CUDA_VERSION} in
-    11.[12])
+    11.[123])
         export OVERRIDE_TORCH_CUDA_ARCH_LIST="${OVERRIDE_TORCH_CUDA_ARCH_LIST};7.5;8.0;8.6"
         ;;
     11.0)
