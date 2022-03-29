@@ -133,6 +133,34 @@ for torchver in 1.9.0; do
 done
 ```
 
+#### PyTorch 1.9.1
+
+``` bash
+for torchver in 1.9.1; do 
+    for cuversion in 11.1 10.2 ; do
+        for pyversion in 3.6m 3.7m 3.8 3.9; do
+            if [ "${pyversion}" = "3.6m" ]; then
+                if [ "${cuversion}" = "11.1" ]; then
+                    export dockerimage='pytorch/manylinux-cuda111@sha256:90f34492d543a6db7484cfd0951112aeb9bbeac34c8d99cbad8e0f49bd3ccd17'
+                else
+                    export dockerimage='pytorch/manylinux-cuda102@sha256:6d7e78cac22ba2525d14b0c7e285348ced7c73c0eda2e2298ae8247c7d3adbc4'
+fi
+            fi
+            for builderver in 53c44fc32989aed041e3e9ca99647f20a75e2199; do
+                cuversion_nodot="$(echo $cuversion | tr -d '.')"
+                ./build_pytorch_wheel.sh \
+                ${pyversion} \
+                ${cuversion} \
+                ${torchver} \
+                ${builderver} \
+                ${dockerimage} |& tee ${torchver}.${pyversion}.cu${cuversion_nodot}.txt
+            done
+        done; 
+    done; 
+done
+```
+
+
 ## Uploading new wheels to GitHub Releases
 
 To make a new release, we'll use [`hub`](https://hub.github.com/).
