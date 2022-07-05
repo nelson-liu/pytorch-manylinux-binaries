@@ -5,14 +5,7 @@ desired_python="$1"
 desired_cuda="$2"
 pytorch_version="$3"
 builder_revision="$4"
-docker_image=${5:=""}
-
-if [ -n "${docker_image}" ]; then
-  echo "Using docker image ${docker_image}"
-else
-  echo "Docker image not supplied, using pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
-  docker_image="pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
-fi
+docker_image="pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
 
 CUDA_VERSION_NO_DOT=$(echo $desired_cuda | tr -d '.')
 MANYWHEELS_BUILD_DIR="_build/${pytorch_version}/manywheel/cu${CUDA_VERSION_NO_DOT}/"
