@@ -5,9 +5,8 @@ desired_python="$1"
 desired_cuda="$2"
 pytorch_version="$3"
 builder_revision="$4"
-docker_image="pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
-
 CUDA_VERSION_NO_DOT=$(echo $desired_cuda | tr -d '.')
+docker_image="pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
 MANYWHEELS_BUILD_DIR="_build/${pytorch_version}/manywheel/cu${CUDA_VERSION_NO_DOT}/"
 DESIRED_DEVTOOLSET="devtoolset7"
 
