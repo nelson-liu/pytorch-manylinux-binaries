@@ -5,14 +5,13 @@ desired_python="$1"
 desired_cuda="$2"
 pytorch_version="$3"
 builder_revision="$4"
-docker_image=""
+docker_image=${5:=""}
 
-if [ -z "$5" ]; then
+if [ -n "${docker_image}" ]; then
+  echo "Using docker image ${docker_image}"
+else
   echo "Docker image not supplied, using pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
   docker_image="pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
-else
-  docker_image="$5"
-  echo "Using docker image ${docker_image}"
 fi
 
 CUDA_VERSION_NO_DOT=$(echo $desired_cuda | tr -d '.')
