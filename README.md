@@ -264,8 +264,7 @@ for torchver in 1.11.0; do
                 ${pyversion} \
                 ${cuversion} \
                 ${torchver} \
-                ${builderver} \
-                ${dockerimage} |& tee ${torchver}.${pyversion}.cu${cuversion_nodot}.txt
+                ${builderver} |& tee ${torchver}.${pyversion}.cu${cuversion_nodot}.txt
             done
         done; 
     done; 
