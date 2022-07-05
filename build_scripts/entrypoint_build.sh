@@ -99,16 +99,10 @@ fi
 
 export OVERRIDE_TORCH_CUDA_ARCH_LIST="3.5;3.7;5.0;6.0;7.0"
 case ${CUDA_VERSION} in
-    11.[123])
+    11.[3567])
         export OVERRIDE_TORCH_CUDA_ARCH_LIST="${OVERRIDE_TORCH_CUDA_ARCH_LIST};7.5;8.0;8.6"
         ;;
-    11.0)
-        export OVERRIDE_TORCH_CUDA_ARCH_LIST="${OVERRIDE_TORCH_CUDA_ARCH_LIST};7.5;8.0"
-        ;;
     10.*)
-        export OVERRIDE_TORCH_CUDA_ARCH_LIST="${OVERRIDE_TORCH_CUDA_ARCH_LIST}"
-        ;;
-    9.*)
         export OVERRIDE_TORCH_CUDA_ARCH_LIST="${OVERRIDE_TORCH_CUDA_ARCH_LIST}"
         ;;
     *)
