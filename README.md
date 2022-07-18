@@ -20,6 +20,7 @@ If you're in a hurry, you can find the download links at https://nelsonliu.me/fi
 - [v1.10.1](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.10.1)
 - [v1.10.2](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.10.2)
 - [v1.11.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.11.0)
+- [v1.12.0](https://github.com/nelson-liu/pytorch-manylinux-binaries/releases/tag/v1.12.0)
 
 These wheels are pip-installable with (change the desired PyTorch / CUDA version, as necessary):
 
@@ -271,6 +272,25 @@ for torchver in 1.11.0; do
 done
 ```
 
+#### PyTorch 1.12.0
+
+``` bash
+for torchver in 1.12.0; do 
+    for cuversion in 11.6 11.3 10.2 ; do
+        for pyversion in 3.7m 3.8 3.9 3.10; do
+            for builderver in c137372844036bb8fdcd99772cf495766f6ca356; do
+                cuversion_nodot="$(echo $cuversion | tr -d '.')"
+                ./build_pytorch_wheel.sh \
+                ${pyversion} \
+                ${cuversion} \
+                ${torchver} \
+                ${builderver} |& tee ${torchver}.${pyversion}.cu${cuversion_nodot}.txt
+            done
+        done; 
+    done; 
+done
+```
+
 
 ## Uploading new wheels to GitHub Releases
 
@@ -510,6 +530,19 @@ done
 ```bash
 for torchver in 1.11.0; do 
     for cuversion in 115 113 102; do
+        for pyversion in 3.7 3.8 3.9 3.10; do
+            echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
+            conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
+            nlprun 'python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)" ; '"python -u main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --save wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.pt --tied 2>&1 | tee wt2_lm_torch${torchver}_${cuversion}_py${pyversion}.log" -p john --gpu-count 1 --memory 16g --gpu-type k40 --cpu-count 3 -n wt2_lm_torch${torchver}_${cuversion}_py${pyversion}
+            conda deactivate ; 
+        done; 
+    done; 
+done
+```
+
+```bash
+for torchver in 1.12.0; do 
+    for cuversion in 116 113 102; do
         for pyversion in 3.7 3.8 3.9 3.10; do
             echo "starting run for torch${torchver}_${cuversion}_py${pyversion}"
             conda activate torch${torchver}_${cuversion}_py${pyversion} ; 
