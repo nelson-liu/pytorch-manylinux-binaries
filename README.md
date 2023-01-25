@@ -317,7 +317,6 @@ To make a new release, we'll use [`hub`](https://hub.github.com/).
 
 ``` bash
 hub release create $(for i in <path/to/version/build/directory>/manywheel/*/* ; do echo "-a ${i}"; done) -m "PyTorch v<version>" v<version>
-
 ```
 
 ## Testing the binaries 
@@ -362,7 +361,7 @@ Navigate to the PyTorch examples repo, and open the word-level LM example:
 cd ~/git/examples/word_language_model/
 ```
 
-Run the word-level LM example for each (torch version, CUDA version, Python version) setting, in turn. Below are loops for each of the PyTorch versions from 1.3.1 ... 1.6.0 .
+Run the word-level LM example for each (torch version, CUDA version, Python version) setting, in turn:
 
 ``` bash
 for torchver in 1.3.1; do 
