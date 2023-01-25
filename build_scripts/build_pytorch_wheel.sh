@@ -6,13 +6,13 @@ desired_cuda="$2"
 pytorch_version="$3"
 builder_revision="$4"
 CUDA_VERSION_NO_DOT=$(echo $desired_cuda | tr -d '.')
-docker_image="pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
+docker_image="pytorch/manylinux-builder:cuda${desired_cuda}"
 MANYWHEELS_BUILD_DIR="_build/${pytorch_version}/manywheel/cu${CUDA_VERSION_NO_DOT}/"
 DESIRED_DEVTOOLSET="devtoolset7"
 
 cd "$(dirname "$0")"  # move inside the script directory
 mkdir -p "${MANYWHEELS_BUILD_DIR}"
-nvidia-docker pull "pytorch/manylinux-cuda${CUDA_VERSION_NO_DOT}"
+nvidia-docker pull ${docker_image}
 nvidia-docker run --rm -it \
     --env CUDA_VERSION="${desired_cuda}" \
     --env CUDA_VERSION_NO_DOT="${CUDA_VERSION_NO_DOT}" \
