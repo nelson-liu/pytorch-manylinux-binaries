@@ -338,7 +338,7 @@ done
 for torchver in 1.13.1; do 
     for cuversion in 11.7 11.6; do
         for pyversion in 3.7 3.8 3.9 3.10 3.11; do
-            for builderver in 65190f8226ff28ede8caf270dc4370a0ae39cbc2; do
+            for builderver in d08f22640ad6f332026f26242d458b8d157187be; do
                 cuversion_nodot="$(echo $cuversion | tr -d '.')"
                 ./build_pytorch_wheel.sh \
                 ${pyversion} \
